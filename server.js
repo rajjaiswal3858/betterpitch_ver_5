@@ -3,10 +3,14 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { recolorHex } = require('./betterpitch/recolor');
 
 const PORT = Number(process.env.PORT) || 4000;
 const ARCHIVE = path.join(__dirname, 'archive');
 const manifest = JSON.parse(fs.readFileSync(path.join(ARCHIVE, 'manifest.json'), 'utf8'));
+// Images with purple swapped for the BetterPitch palette (made by recolor-images.js).
+const RECOLORED = path.join(__dirname, 'betterpitch', 'recolored');
+const recolored = new Set(fs.existsSync(RECOLORED) ? fs.readdirSync(RECOLORED) : []);
 const SITE = 'www.artisan.co';
 // Other archived hosts, served under /__ext/<host>. The dashboard hosts are the
 // "Ava" web-chat widget: its loader, its iframe app and its API.
@@ -78,7 +82,8 @@ function rewrite(body) {
   s = s.split('https://dashboard.artisan.co/embed/').join('/__ext//dashboard.artisan.co/embed/');
   s = s.split('"https://dashboard.artisan.co"').join('"/__ext//dashboard.artisan.co"');
   for (const h of EXT_HOSTS) if (h !== 'dashboard.artisan.co') s = s.split('https://' + h).join('/__ext//' + h);
-  return s;
+  // purple hex colours -> BetterPitch palette (same length, so RSC prefixes stay valid)
+  return recolorHex(s);
 }
 
 function lookup(u) {
@@ -106,7 +111,7 @@ function lookup(u) {
 }
 
 function send(res, entry) {
-  let body = fs.readFileSync(path.join(ARCHIVE, 'files', entry.file));
+  let body = fs.readFileSync(recolored.has(entry.file) ? path.join(RECOLORED, entry.file) : path.join(ARCHIVE, 'files', entry.file));
   if (TEXT_RE.test(entry.type)) body = rewrite(body);
   const headers = { 'content-type': entry.type || 'application/octet-stream', 'cache-control': 'no-cache' };
   if (/text\/html/.test(entry.type)) {
@@ -114,7 +119,9 @@ function send(res, entry) {
     // BetterPitch copy is swapped in on the client (betterpitch/content.js) so the
     // recorded markup and RSC payloads stay byte-identical.
     // The home page's first section is added the same way (betterpitch/hero.js).
-    body = body.replace('</head>', '<script src="/__bp/content.js"></script><script src="/__bp/hero.js"></script></head>');
+    // The colour/motion theme is a stylesheet plus a small script (betterpitch/theme.*),
+    // linked last so it wins over the recorded CSS.
+    body = body.replace('</head>', '<link rel="stylesheet" href="/__bp/theme.css"><script src="/__bp/content.js"></script><script src="/__bp/hero.js"></script><script src="/__bp/theme.js"></script></head>');
   }
   res.writeHead(entry.status, headers);
   res.end(body);
@@ -123,7 +130,7 @@ function send(res, entry) {
 http.createServer((req, res) => {
   const u = new URL(req.url, 'http://localhost');
   // Analytics endpoints (PostHog proxy) - answer with an empty success so nothing errors.
-  const BP = { '/__bp/content.js': 'application/javascript', '/__bp/hero.js': 'application/javascript', '/__bp/hero.css': 'text/css' };
+  const BP = { '/__bp/content.js': 'application/javascript', '/__bp/hero.js': 'application/javascript', '/__bp/hero.css': 'text/css', '/__bp/theme.css': 'text/css', '/__bp/theme.js': 'application/javascript' };
   if (BP[u.pathname]) {
     res.writeHead(200, { 'content-type': BP[u.pathname], 'cache-control': 'no-cache' });
     return res.end(fs.readFileSync(path.join(__dirname, 'betterpitch', path.basename(u.pathname))));

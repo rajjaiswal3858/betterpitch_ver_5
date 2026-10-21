@@ -1,0 +1,135 @@
+/* BetterPitch theme: recolours the recorded site (purple/ivory -> deep ocean,
+   teal and coral) and adds a motion layer. Loaded on every page by server.js.
+   Only colours, shadows and animation change here; no layout, sizes or order,
+   so the section structure stays exactly as recorded. */
+
+/* ---- palette: Tailwind tokens the recorded CSS reads ---- */
+html:root{
+  --bp-ink:#0b1a2b;
+  --bp-ocean:#0a3550;
+  --bp-deep:#061e30;
+  --bp-teal:#14b8c4;
+  --bp-cyan:#5fe0e8;
+  --bp-coral:#ff7a5c;
+  --bp-rose:#ff4f8b;
+  --bp-mist:#f5f9fb;
+
+  --color-primary-50:#effafc;
+  --color-primary-100:#dbf2f7;
+  --color-primary-200:#bae5ee;
+  --color-primary-300:#89d2e2;
+  --color-primary-400:#4db8cf;
+  --color-primary-500:#269bb6;
+  --color-primary-600:#18809c;
+  --color-primary-700:#136780;
+  --color-primary-800:#0a3550;
+  --color-primary-900:#08263a;
+  --color-purple-6:#0a355006;
+  --color-lavender:#dbf2f7;
+  --color-ivory:#edf3f6;
+  --color-secondary-ivory:#edf3f6;
+  --color-secondary-light-ivory:#f5f9fb;
+
+  --color-neutral-50:#eef2f5;
+  --color-neutral-100:#d9e0e6;
+  --color-neutral-200:#c2cbd4;
+  --color-neutral-300:#a5b0bc;
+  --color-neutral-400:#8d99a7;
+  --color-neutral-500:#6c7a8a;
+  --color-neutral-600:#5d6b7b;
+  --color-neutral-700:#435163;
+  --color-neutral-800:#2e3b4b;
+  --color-neutral-900:#1c2938;
+  --color-neutral-950:#0b1a2b;
+
+  --gradient-hero:linear-gradient(0deg,#f5f9fb 0%,#ddf3f7 46.84%,#f5f9fb 100%);
+  --gradient-deep-gradient:linear-gradient(0deg,#cdf1f5 -90.98%,#0a3550 79.56%);
+  --gradient-purple-vertical:linear-gradient(0deg,#cdf1f5 -90.98%,#0a3550 48.61%);
+  --gradient-ivory-lavender:linear-gradient(0deg,#ddf3f7 0%,#eef4f6 100%);
+  --gradient-lavender-ivory:linear-gradient(0deg,#eef4f6 0%,#ddf3f7 100%);
+  --gradient-text:linear-gradient(270deg,#89d2e2 0%,#89d2e2 3.9%,#14b8c4 17.76%,#5fe0e8 30.05%,#ffc58a 45.89%,#ff7a5c 58.02%,#ff4f8b 65.5%,#26a6c4 76.57%,#4db8cf 89.53%,#4db8cf 100%);
+}
+::selection{background:#5fe0e8;color:#0b1a2b}
+
+/* hard-coded colours in the recorded utility classes */
+.bg-\[\#E4E1F3\]{background-color:#dbf2f7!important}
+.bg-\[\#EDDCF4\],.bg-\[\#eddcf4\]{background-color:#d6f3f2!important}
+.bg-\[\#F4F0EC\],.bg-\[\#f8f5f3\]{background-color:#eef4f6!important}
+.bg-\[\#F8F3E7\]{background-color:#fff3ec!important}
+.bg-\[\#7A08CC\],.hover\:bg-\[\#7A08CC\]\!:hover{background-color:#0f6c86!important}
+.bg-\[\#CC089E\],.hover\:bg-\[\#CC089E\]\!:hover{background-color:#e2563d!important}
+.text-\[\#896cbf\]{color:#18809c!important}
+.border-\[\#764abd\]{border-color:#136780!important}
+/* icon tiles (lavender / sky / butter / mint) */
+.from-\[\#f4edff\]{--tw-gradient-from:#e6f8fb!important}
+.to-\[\#e1cdff\]{--tw-gradient-to:#bfe9f1!important}
+.from-\[\#e1cdff\]{--tw-gradient-from:#bfe9f1!important}
+.to-\[\#f4edff\]{--tw-gradient-to:#e6f8fb!important}
+.from-\[\#fff8e3\]{--tw-gradient-from:#fff4ee!important}
+.to-\[\#fff2c8\]{--tw-gradient-to:#ffdccc!important}
+
+/* headline gradient text (colours set inline by the page's script) */
+.animated-gradient-text{background-image:linear-gradient(90deg,#0b1a2b 0%,#0b1a2b 42%,#0e3148 48%,#136780 52%,#14b8c4 58%,#26a6c4 68%,#ffb07a 80%,#ff7a5c 90%,#ff4f8b 100%)!important}
+.animated-gradient-text[style*="rgb(255, 255, 255) 0%"]{background-image:linear-gradient(90deg,#fff 0%,#fff 42%,#d7f6f8 48%,#9ee9ef 52%,#5fe0e8 58%,#14b8c4 68%,#ffc58a 80%,#ff7a5c 90%,#ff4f8b 100%)!important}
+
+/* ---- motion ---- */
+
+/* top scroll progress bar (added by theme.js) */
+#bp-progress{position:fixed;left:0;top:0;height:3px;width:100%;z-index:9999;pointer-events:none;transform-origin:0 50%;transform:scaleX(0);
+  background:linear-gradient(90deg,#14b8c4,#5fe0e8 45%,#ff7a5c 80%,#ff4f8b);box-shadow:0 0 12px rgba(95,224,232,.6)}
+
+/* scroll reveal (theme.js sets data-bp-reveal, then flips it to "in") */
+[data-bp-reveal]{transition:opacity .9s cubic-bezier(.2,.75,.2,1),translate .9s cubic-bezier(.2,.75,.2,1),filter .9s;transition-delay:var(--bp-delay,0s)}
+[data-bp-reveal="out"]{opacity:0;translate:0 34px;filter:blur(6px)}
+[data-bp-reveal="in"]{opacity:1;translate:none;filter:none}
+
+/* soft breathing light across the pale gradient sections */
+.bg-gradient-hero,.bg-gradient-lavender-ivory,.bg-gradient-ivory-lavender{background-size:100% 160%!important;animation:bpBreathe 14s ease-in-out infinite alternate}
+@keyframes bpBreathe{from{background-position:50% 0%}to{background-position:50% 100%}}
+
+/* dark feature section: slow-moving aurora over the deep ocean */
+section.bg-primary-800{background-image:
+    radial-gradient(40% 30% at 15% 20%,rgba(20,184,196,.28),transparent 70%),
+    radial-gradient(35% 28% at 85% 45%,rgba(255,122,92,.16),transparent 70%),
+    radial-gradient(45% 35% at 40% 85%,rgba(95,224,232,.18),transparent 70%);
+  background-size:180% 180%;animation:bpAurora 22s ease-in-out infinite alternate}
+@keyframes bpAurora{0%{background-position:0% 0%}50%{background-position:100% 40%}100%{background-position:30% 100%}}
+.bg-gradient-deep-gradient,.bg-gradient-purple-vertical{background-size:100% 140%!important;animation:bpBreathe 10s ease-in-out infinite alternate}
+
+/* buttons: lift, glow and a light sheen sweeping across solid CTAs */
+main button,main a,nav button,nav a,footer a{transition:transform .25s cubic-bezier(.2,.75,.2,1.3),box-shadow .25s,background-color .25s,color .25s,border-color .25s}
+main [class*="rounded-xl"][class*="py-3.5"]:hover,nav [class*="rounded-xl"][class*="py-3.5"]:hover{transform:translateY(-2px)}
+.bg-primary-800[class*="py-3.5"],nav a.bg-primary-800,main a.bg-primary-800,main button.bg-primary-800{
+  background-image:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.28) 50%,transparent 65%),linear-gradient(135deg,#0a3550,#0f5a78);
+  background-size:250% 100%,100% 100%;background-position:150% 0,0 0;background-repeat:no-repeat}
+.bg-primary-800[class*="py-3.5"]:hover,main a.bg-primary-800:hover,main button.bg-primary-800:hover{
+  background-position:-60% 0,0 0;box-shadow:0 12px 28px -10px rgba(10,53,80,.65),0 0 0 4px rgba(20,184,196,.18);
+  transition:background-position .8s ease,transform .25s cubic-bezier(.2,.75,.2,1.3),box-shadow .25s}
+main [class*="rounded-xl"][class*="border"][class*="py-3.5"]:hover,nav [class*="rounded-xl"][class*="border"][class*="py-3.5"]:hover{border-color:#14b8c4;box-shadow:0 10px 24px -14px rgba(20,184,196,.7)}
+
+/* cards lift and pick up a teal edge on hover (big section panels excluded) */
+main .rounded-2xl:is(.bg-white,.bg-primary-50,.bg-secondary-light-ivory):not([class*="py-16"]):not([class*="py-30"]),
+main .rounded-xl:is(.bg-white,.bg-primary-50):not([class*="py-3.5"]){
+  transition:transform .35s cubic-bezier(.2,.75,.2,1),box-shadow .35s,background-color .5s}
+main .rounded-2xl:is(.bg-white,.bg-primary-50,.bg-secondary-light-ivory):not([class*="py-16"]):not([class*="py-30"]):hover{
+  transform:translateY(-4px);box-shadow:0 22px 44px -26px rgba(10,53,80,.45),0 0 0 1px rgba(20,184,196,.25)}
+
+/* icon tiles wobble a little on hover */
+main [class*="place-items-center"][class*="bg-gradient-to-b"]{transition:transform .4s cubic-bezier(.2,.75,.2,1.6)}
+main :hover>[class*="place-items-center"][class*="bg-gradient-to-b"]{transform:rotate(-6deg) scale(1.08)}
+
+/* nav text links: underline grows from the left */
+nav a:not([class*="rounded"]):not([class*="border"]){background-image:linear-gradient(90deg,#14b8c4,#ff7a5c);background-size:0 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .35s cubic-bezier(.2,.75,.2,1),color .25s}
+nav a:not([class*="rounded"]):not([class*="border"]):hover{background-size:100% 2px}
+
+/* keyboard focus */
+:focus-visible{outline:2px solid #14b8c4!important;outline-offset:3px}
+
+/* the page scrolls inside #page-scroller */
+#page-scroller{scrollbar-color:#4db8cf transparent}
+
+@media (prefers-reduced-motion:reduce){
+  [data-bp-reveal]{opacity:1!important;translate:none!important;filter:none!important;transition:none!important}
+  .bg-gradient-hero,.bg-gradient-lavender-ivory,.bg-gradient-ivory-lavender,section.bg-primary-800,.bg-gradient-deep-gradient,.bg-gradient-purple-vertical{animation:none!important}
+  #bp-progress{display:none}
+}

@@ -2,12 +2,12 @@
    betterpitch.vercel.app hero: tile bloom, entrance, toggle switch, glass play
    orb, waveform and sample cards. Everything is scoped to #bp-hero so the
    recorded page's styles are untouched. */
-#bp-hero{--bph-ink:#0b0a10;padding:calc(var(--bph-nav,80px) + 2px) 10px 0;font-family:var(--font-inter),var(--font-helvetica),system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+#bp-hero{--bph-ink:#0b1a2b;padding:calc(var(--bph-nav,80px) + 2px) 10px 0;font-family:var(--font-inter),var(--font-helvetica),system-ui,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
 #bp-hero *{box-sizing:border-box}
 #bp-hero a{color:inherit;text-decoration:none}
 
 .bph-box{position:relative;overflow:hidden;isolation:isolate;border-radius:56px 56px 40px 40px;padding:58px 0 40px;
-  background:linear-gradient(180deg,#000 0%,#000 14%,#0d0310 19%,#24072c 24%,#3c0d48 29%,#521164 34%,#691781 39%,#801c9d 44%,#9821ba 49%,#af26d5 54%,#c62bf2 59%,#d23bfd 64%,#d751fd 69%,#dc68fd 74%,#e180fd 79%,#e797fe 84%,#f0c4fe 90%,#fbeeff 95%,#fff 100%)}
+  background:linear-gradient(180deg,#000 0%,#01070c 14%,#03121d 19%,#061e30 24%,#08283f 29%,#0a3550 34%,#0d4563 39%,#105676 44%,#136889 49%,#167b9b 54%,#198eab 59%,#1ea2ba 64%,#2db4c6 69%,#47c3d0 74%,#68d0d9 79%,#8fdde3 84%,#bdecef 90%,#e8f9fa 95%,#fff 100%)}
 .bph-wrap{max-width:1180px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
 .bph-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:50px;align-items:center}
 .bph-grid>*{min-width:0}
@@ -16,11 +16,11 @@
 .bph-tiles{position:absolute;inset:-10px;display:grid;grid-auto-rows:40px;gap:8px;z-index:0;pointer-events:none;
   -webkit-mask:linear-gradient(180deg,#000 0%,rgba(0,0,0,.55) 55%,rgba(0,0,0,.25) 100%);mask:linear-gradient(180deg,#000 0%,rgba(0,0,0,.55) 55%,rgba(0,0,0,.25) 100%)}
 .bph-tiles i{border-radius:12px;background:rgba(255,255,255,.03);animation:bphTileBloom 4.5s ease-out infinite both;transition:background .25s,box-shadow .25s}
-.bph-tiles i.hot{background:rgba(255,255,255,.22)!important;box-shadow:0 0 30px rgba(240,171,252,.35);animation-play-state:paused}
+.bph-tiles i.hot{background:rgba(255,255,255,.22)!important;box-shadow:0 0 30px rgba(95,224,232,.35);animation-play-state:paused}
 /* one pulse per cycle; per-tile delay (set in JS from distance to centre) turns it into an outward wave */
 @keyframes bphTileBloom{
   0%{background:rgba(255,255,255,.03);box-shadow:none;transform:scale(1)}
-  8%{background:rgba(255,255,255,.3);box-shadow:0 0 30px rgba(240,171,252,.4);transform:scale(1.04)}
+  8%{background:rgba(255,255,255,.3);box-shadow:0 0 30px rgba(95,224,232,.4);transform:scale(1.04)}
   26%{background:rgba(255,255,255,.1);box-shadow:none;transform:scale(1)}
   45%,100%{background:rgba(255,255,255,.03);box-shadow:none;transform:scale(1)}
 }
@@ -36,12 +36,16 @@
 .bph-pill svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
 #bp-hero h1{font-size:clamp(34px,3.8vw,51px);font-weight:700;line-height:.98;letter-spacing:-.05em;margin:0 0 26px;color:#fff}
 #bp-hero h1 em{font-family:var(--font-intrinseca),Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.03em;margin-left:.12em}
+/* italic line shimmers through ice-blue and coral */
+#bp-hero h1 em{background:linear-gradient(100deg,#fff 0%,#fff 30%,#a5f3f8 42%,#ffc9b0 52%,#fff 64%,#fff 100%);background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:bphShimmer 6s ease-in-out 1.2s infinite}
+@keyframes bphShimmer{0%{background-position:100% 0}60%,100%{background-position:-20% 0}}
 .bph-copy>p{color:#fff;font-size:15px;line-height:1.15;max-width:440px;margin:0;font-weight:500}
 
 /* demo: toggle pill above a glass card */
 .bph-demo{display:flex;flex-direction:column;align-items:center;gap:14px}
 .bph-mode{position:relative;display:flex;align-items:center;justify-content:center;gap:22px;width:fit-content;max-width:100%;padding:6px 22px;border-radius:999px;
-  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),rgba(10,6,12,.85);border:1px solid rgba(255,255,255,.14);
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),rgba(4,16,26,.85);border:1px solid rgba(255,255,255,.14);
   box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 10px 30px -12px rgba(0,0,0,.7);backdrop-filter:blur(14px)}
 .bph-mode button{flex:none;display:flex;align-items:center;gap:12px;padding:6px 2px;background:none;border:0;font:inherit;font-weight:600;font-size:15px;cursor:pointer;color:rgba(255,255,255,.45);position:relative;z-index:1;transition:color .35s}
 .bph-mode button.on{color:#fff}
@@ -50,13 +54,13 @@
   background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,.15));border:1px solid rgba(255,255,255,.3);box-shadow:inset 0 2px 8px rgba(0,0,0,.4)}
 .bph-switch::after{content:"";position:absolute;right:12px;top:50%;width:24px;height:12px;margin-top:-6px;border-radius:999px;background:rgba(0,0,0,.55);transition:.45s}
 .bph-knob{position:absolute;top:3px;left:3px;width:38px;height:38px;border-radius:999px;z-index:1;
-  background:radial-gradient(circle at 40% 35%,#fff,#ebe8f0 55%,#c9c3d3);box-shadow:0 4px 14px rgba(0,0,0,.5);transition:transform .45s cubic-bezier(.65,.05,.25,1)}
+  background:radial-gradient(circle at 40% 35%,#fff,#e6eef2 55%,#c3d0d8);box-shadow:0 4px 14px rgba(0,0,0,.5);transition:transform .45s cubic-bezier(.65,.05,.25,1)}
 .bph-mode[data-mode="chat"] .bph-knob{transform:translateX(34px)}
 .bph-mode[data-mode="chat"] .bph-switch::after{right:auto;left:12px}
 
 .bph-panel{width:100%;border-radius:40px;padding:34px 20px 20px;border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);
   background:radial-gradient(60% 40% at 50% 0%,rgba(255,255,255,.12),transparent 75%),
-    linear-gradient(180deg,rgba(18,10,22,.92) 0%,rgba(18,10,22,.55) 30%,rgba(255,255,255,.04) 65%,rgba(255,255,255,.08));
+    linear-gradient(180deg,rgba(5,18,30,.92) 0%,rgba(5,18,30,.55) 30%,rgba(255,255,255,.04) 65%,rgba(255,255,255,.08));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 30px 80px -40px rgba(0,0,0,.6)}
 
 /* big glass play button */
@@ -69,8 +73,8 @@
 /* hover anywhere on the orb area: orb lifts and glows, ring opens out, waveform ripples up */
 .bph-orb-wrap:hover .bph-orb{transform:scale(1.07);border-color:rgba(255,255,255,.45);
   background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.4),rgba(255,255,255,.12) 70%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 0 0 6px rgba(255,255,255,.05),0 0 60px -6px rgba(232,121,249,.75),0 14px 44px -12px rgba(0,0,0,.55)}
-.bph-orb-wrap:hover .bph-orb::before{inset:-24px;border-color:rgba(255,255,255,.32);box-shadow:0 0 24px -4px rgba(232,121,249,.45)}
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 0 0 6px rgba(255,255,255,.05),0 0 60px -6px rgba(20,184,196,.75),0 14px 44px -12px rgba(0,0,0,.55)}
+.bph-orb-wrap:hover .bph-orb::before{inset:-24px;border-color:rgba(255,255,255,.32);box-shadow:0 0 24px -4px rgba(20,184,196,.45)}
 .bph-orb-wrap:hover .bph-tri{filter:drop-shadow(0 0 8px rgba(255,255,255,.8))}
 .bph-orb:active{transform:scale(.95);transition-duration:.1s}
 .bph-orb.live::before{animation:bphRing 2s ease-out infinite}
@@ -78,8 +82,8 @@
 .bph-tri{position:absolute;left:54%;top:50%;transform:translate(-50%,-50%);border-left:24px solid #fff;border-top:15px solid transparent;border-bottom:15px solid transparent}
 .bph-orb.live .bph-tri{border:0;width:24px;height:28px;left:50%;background:linear-gradient(90deg,#fff 0 35%,transparent 35% 65%,#fff 65%)}
 .bph-orb.live{border-color:rgba(255,255,255,.5);
-  background:radial-gradient(circle at 50% 30%,rgba(255,220,255,.45),rgba(217,70,239,.25) 70%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 0 70px -4px rgba(232,121,249,.85)}
+  background:radial-gradient(circle at 50% 30%,rgba(210,250,252,.45),rgba(20,184,196,.3) 70%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 0 70px -4px rgba(20,184,196,.85)}
 
 /* sparse hairline waveform: tiny ticks with a few spikes, sitting on a baseline */
 .bph-wave{display:flex;justify-content:space-between;align-items:flex-end;height:48px;margin:-18px 0 26px;padding:0 6px}
@@ -101,7 +105,7 @@
 .bph-sample:hover .bph-pb{transform:scale(1.1)}
 .bph-sample b{font-size:14px;line-height:1.2;font-weight:700}
 .bph-mini{display:flex;align-items:center;gap:2px;height:16px;margin-left:auto;flex:none}
-.bph-mini i{width:1.5px;height:100%;border-radius:1px;background:#e9d5ff;transform:scaleY(.3)}
+.bph-mini i{width:1.5px;height:100%;border-radius:1px;background:#c4f1f4;transform:scaleY(.3)}
 .bph-mini i:nth-child(2n){transform:scaleY(.6)}.bph-mini i:nth-child(3n){transform:scaleY(.9)}.bph-mini i:nth-child(4n){transform:scaleY(.45)}
 .bph-sample.playing .bph-mini i{animation:bphWaveBar .55s ease-in-out infinite alternate}
 .bph-sample.playing .bph-mini i:nth-child(2n){animation-delay:-.2s}.bph-sample.playing .bph-mini i:nth-child(3n){animation-delay:-.4s}.bph-sample.playing .bph-mini i:nth-child(5n){animation-delay:-.1s}
@@ -112,7 +116,7 @@
 .bph-row{display:flex;gap:12px}
 .bph-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 18px;border-radius:999px;font:inherit;font-weight:600;font-size:15px;cursor:pointer;border:1px solid transparent;transition:.2s}
 .bph-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.bph-btn-light{background:linear-gradient(180deg,#fff,#f3e8ff);color:var(--bph-ink)}
+.bph-btn-light{background:linear-gradient(180deg,#fff,#dff7f9);color:var(--bph-ink)}
 .bph-btn-light:hover{transform:translateY(-2px);box-shadow:0 12px 30px -10px #000}
 .bph-btn-glass{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.2);color:#fff}
 .bph-btn-glass:hover{background:rgba(255,255,255,.22)}
@@ -120,12 +124,16 @@
 
 /* feature strip at the bottom of the hero, and the proof row under it */
 .bph-features{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:56px}
-.bph-feature{display:flex;align-items:center;gap:16px;background:#fff;color:var(--bph-ink);border-radius:18px;padding:13px 18px;font-size:15px;font-weight:500;box-shadow:0 10px 30px -18px rgba(59,7,100,.5);transition:transform .25s,box-shadow .25s}
-.bph-feature:hover{transform:translateY(-3px);box-shadow:0 16px 36px -18px rgba(59,7,100,.6)}
+.bph-feature{display:flex;align-items:center;gap:16px;background:#fff;color:var(--bph-ink);border-radius:18px;padding:13px 18px;font-size:15px;font-weight:500;box-shadow:0 10px 30px -18px rgba(6,30,48,.5);transition:transform .25s,box-shadow .25s}
+.bph-feature:hover{transform:translateY(-3px);box-shadow:0 16px 36px -18px rgba(6,30,48,.6),0 0 0 1px rgba(20,184,196,.35)}
+.bph-feature svg{transition:transform .4s cubic-bezier(.2,.75,.2,1.6),color .3s}
+.bph-feature:hover svg{transform:rotate(-10deg) scale(1.15);color:#14b8c4}
+.bph-proof div{transition:transform .25s,box-shadow .25s}
+.bph-proof div:hover{transform:translateY(-2px);box-shadow:0 10px 24px -14px rgba(10,53,80,.5)}
 .bph-feature svg{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .bph-proof{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:1180px;margin:14px auto 0;padding:0 20px}
-.bph-proof div{display:flex;align-items:center;gap:14px;background:#f6f5f7;color:var(--bph-ink);border-radius:999px;padding:6px 16px 6px 6px;font-size:15px;font-weight:500}
-.bph-proof i{width:30px;height:30px;flex:none;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#d946ef,#6b21a8 60%,#1e0533);box-shadow:0 0 0 3px #fff}
+.bph-proof div{display:flex;align-items:center;gap:14px;background:#eef5f8;color:var(--bph-ink);border-radius:999px;padding:6px 16px 6px 6px;font-size:15px;font-weight:500}
+.bph-proof i{width:30px;height:30px;flex:none;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#5fe0e8,#0f6c86 60%,#04182a);box-shadow:0 0 0 3px #fff}
 .bph-proof i::after{content:"";width:9px;height:5px;margin-top:-3px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg)}
 
 @media(max-width:960px){
@@ -154,6 +162,6 @@
   .bph-pill{font-size:13px;padding:9px 14px}
 }
 @media (prefers-reduced-motion:reduce){
-  .bph-tiles i,.bph-orb::before,.bph-wave i,.bph-sample,.bph-mini i{animation:none!important}
+  .bph-tiles i,.bph-orb::before,.bph-wave i,.bph-sample,.bph-mini i,#bp-hero h1 em{animation:none!important}
   .bph-enter,.bph-enter-side{animation:none;opacity:1;transform:none}
 }

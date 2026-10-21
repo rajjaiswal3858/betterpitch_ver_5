@@ -18,6 +18,7 @@ Next.js JavaScript, animations, menus and images all work.
 | `npm run capture -- /pricing /about` | Re-records only specific pages |
 | `npm run verify` | Opens every page from the local copy, lists missing files/JS errors, saves screenshots to `screenshots/` |
 | `npm run compare` | Screenshots live site vs local copy at 1440 / 768 / 375px, segment by segment down each page, and reports % of pixels that differ (`comparisons/`, `comparisons/report.json`) |
+| `npm run recolor` | Recolours purple in the archived images to the BetterPitch palette (`betterpitch/recolored/`); re-run after a capture, then restart the server |
 | `npm run fetch-missing` | Downloads files `verify` reported missing (reads `verify-report.txt`) straight into the archive |
 
 After a capture, restart `npm start` so it picks up the new archive.
