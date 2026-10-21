@@ -1,11 +1,11 @@
 // Replays the archive recorded by capture.js on http://localhost:PORT.
-// Usage: node server.js   (PORT env var optional, default 4000)
+// Usage: node server.js   (PORT env var optional, default 5000)
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { recolorHex } = require('./betterpitch/recolor');
 
-const PORT = Number(process.env.PORT) || 4000;
+const PORT = Number(process.env.PORT) || 5000;
 const ARCHIVE = path.join(__dirname, 'archive');
 const manifest = JSON.parse(fs.readFileSync(path.join(ARCHIVE, 'manifest.json'), 'utf8'));
 // Images with purple swapped for the BetterPitch palette (made by recolor-images.js).

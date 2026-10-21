@@ -12,7 +12,7 @@ const { scrollThrough, scrollTo } = require('./scroller');
 const { decode, encode } = require('./png');
 
 const LIVE = 'https://www.artisan.co';
-const LOCAL = process.env.BASE || 'http://localhost:4000';
+const LOCAL = process.env.BASE || 'http://localhost:5000';
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const OUT = path.join(__dirname, 'comparisons');
 const BLOCK_RE = /googletagmanager|google-analytics|posthog|facebook|licdn|cookiebot|chilipiper|hotjar|clarity|doubleclick|hubspot|intercom|segment|withsherpa|leadresponse/;

@@ -7,13 +7,13 @@ Next.js JavaScript, animations, menus and images all work.
 ## Run
 
     npm install      # first time only
-    npm start        # -> http://localhost:4000
+    npm start        # -> http://localhost:5000
 
 ## Commands
 
 | Command | What it does |
 |---|---|
-| `npm start` | Serves the archive at http://localhost:4000 (`PORT=5000 npm start` to change port) |
+| `npm start` | Serves the archive at http://localhost:5000 (`PORT=6000 npm start` to change port) |
 | `npm run capture` | Re-records every page in `pages.txt` from the live site (needs internet) |
 | `npm run capture -- /pricing /about` | Re-records only specific pages |
 | `npm run verify` | Opens every page from the local copy, lists missing files/JS errors, saves screenshots to `screenshots/` |

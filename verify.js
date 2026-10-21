@@ -6,7 +6,7 @@ const path = require('path');
 const puppeteer = require('puppeteer-core');
 const { scrollThrough } = require('./scroller');
 
-const BASE = process.env.BASE || 'http://localhost:4000';
+const BASE = process.env.BASE || 'http://localhost:5000';
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const SHOTS = path.join(__dirname, 'screenshots');
 fs.mkdirSync(SHOTS, { recursive: true });
