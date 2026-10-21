@@ -31,6 +31,13 @@ Chromium) set `CHROME_PATH`, e.g. in PowerShell:
 The site scrolls inside `#page-scroller`, not the window (`<html>`/`<body>`
 are `overflow: hidden`), so the scripts scroll that element (`scroller.js`).
 
+## Deploy to Vercel
+
+Import the repo in Vercel and deploy with the defaults; `vercel.json` does the rest.
+Every request goes to one function (`api/index.js`, the same handler as `npm start`),
+and `build-vercel.js` puts the few archive files over the 4.5 MB function response
+limit into `public/` so they are served as static files.
+
 ## Files
 
 - `capture.js` – records the live site into `archive/` (headless Chrome)

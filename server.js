@@ -1,8 +1,10 @@
 // Replays the archive recorded by capture.js on http://localhost:PORT.
 // Usage: node server.js   (PORT env var optional, default 5000)
+// On Vercel the same handler runs as a function (api/index.js, vercel.json).
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 const { recolorHex } = require('./betterpitch/recolor');
 
 const PORT = Number(process.env.PORT) || 5000;
@@ -69,9 +71,10 @@ const CSP = [
 
 // Replacements must keep the exact byte length: Next.js embeds RSC "T" rows
 // whose length prefix covers this text, and a mismatch breaks hydration
-// ("Connection closed."). "http://localhost:" + 5-digit zero-padded port is
-// 22 chars, same as "https://www.artisan.co"; "/__ext//" is 8 chars, same as "https://".
-const LOCAL_ORIGIN = 'http://localhost:' + String(PORT).padStart(5, '0');
+// ("Connection closed."). "https://www.artisan.co" (22 chars) becomes 22 chars
+// of "/." segments, which URL resolution collapses to "/" - a root-relative
+// link that works on any host or port; "/__ext//" is 8 chars, same as "https://".
+const LOCAL_ORIGIN = '/.'.repeat(11);
 
 function rewrite(body) {
   let s = body.toString('utf8');
@@ -110,10 +113,19 @@ function lookup(u) {
   return extByPath[u.pathname] || null;
 }
 
-function send(res, entry) {
-  let body = fs.readFileSync(recolored.has(entry.file) ? path.join(RECOLORED, entry.file) : path.join(ARCHIVE, 'files', entry.file));
-  if (TEXT_RE.test(entry.type)) body = rewrite(body);
-  const headers = { 'content-type': entry.type || 'application/octet-stream', 'cache-control': 'no-cache' };
+// Archive file as served: recoloured image if there is one, text rewritten.
+function load(entry) {
+  const body = fs.readFileSync(recolored.has(entry.file) ? path.join(RECOLORED, entry.file) : path.join(ARCHIVE, 'files', entry.file));
+  return TEXT_RE.test(entry.type) ? rewrite(body) : body;
+}
+
+// On Vercel the CDN may cache responses (the archive only changes with a new
+// deployment, which clears the cache); locally always revalidate.
+const CACHE = process.env.VERCEL ? 'public, max-age=0, s-maxage=31536000' : 'no-cache';
+
+function send(req, res, entry) {
+  let body = load(entry);
+  const headers = { 'content-type': entry.type || 'application/octet-stream', 'cache-control': CACHE };
   if (/text\/html/.test(entry.type)) {
     headers['content-security-policy'] = CSP;
     // BetterPitch copy is swapped in on the client (betterpitch/content.js) so the
@@ -123,16 +135,22 @@ function send(res, entry) {
     // linked last so it wins over the recorded CSS.
     body = body.replace('</head>', '<link rel="stylesheet" href="/__bp/theme.css"><script src="/__bp/content.js"></script><script src="/__bp/hero.js"></script><script src="/__bp/theme.js"></script></head>');
   }
+  // gzip text: smaller pages, and keeps big JSON/SVG under Vercel's 4.5 MB response limit
+  if (typeof body === 'string' && body.length > 1024 && /\bgzip\b/.test(req.headers['accept-encoding'] || '')) {
+    body = zlib.gzipSync(body);
+    headers['content-encoding'] = 'gzip';
+    headers['vary'] = 'Accept-Encoding';
+  }
   res.writeHead(entry.status, headers);
   res.end(body);
 }
 
-http.createServer((req, res) => {
+function handler(req, res) {
   const u = new URL(req.url, 'http://localhost');
   // Analytics endpoints (PostHog proxy) - answer with an empty success so nothing errors.
   const BP = { '/__bp/content.js': 'application/javascript', '/__bp/hero.js': 'application/javascript', '/__bp/hero.css': 'text/css', '/__bp/theme.css': 'text/css', '/__bp/theme.js': 'application/javascript' };
   if (BP[u.pathname]) {
-    res.writeHead(200, { 'content-type': BP[u.pathname], 'cache-control': 'no-cache' });
+    res.writeHead(200, { 'content-type': BP[u.pathname], 'cache-control': CACHE });
     return res.end(fs.readFileSync(path.join(__dirname, 'betterpitch', path.basename(u.pathname))));
   }
   if (u.pathname.startsWith('/ingest')) {
@@ -144,7 +162,7 @@ http.createServer((req, res) => {
     // panel renders as it does live. Anything else - sending a message, starting
     // a call - needs Artisan's live AI backend, which only accepts artisan.co.
     const k = 'POST ' + u.pathname.replace(/^\/__ext\/+/, '');
-    if (manifest[k]) return send(res, manifest[k]);
+    if (manifest[k]) return send(req, res, manifest[k]);
     if (k.includes(CHAT_API)) {
       res.writeHead(503, { 'content-type': 'application/json' });
       return res.end(JSON.stringify({ success: false, error: { code: 'OFFLINE_REPLICA', message: 'Chat is not available in the local replica.' } }));
@@ -161,5 +179,11 @@ http.createServer((req, res) => {
     res.writeHead(404, { 'content-type': 'text/plain' });
     return res.end('Not in archive: ' + u.pathname + u.search + '\nRun: node capture.js ' + u.pathname);
   }
-  send(res, manifest[key]);
-}).listen(PORT, () => console.log(`Artisan replica running at http://localhost:${PORT}`));
+  send(req, res, manifest[key]);
+}
+
+module.exports = { handler, manifest, load };
+
+if (require.main === module) {
+  http.createServer(handler).listen(PORT, () => console.log(`Artisan replica running at http://localhost:${PORT}`));
+}
